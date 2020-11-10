@@ -7,18 +7,18 @@ const { dbConnection } = require('./database/config');
 const app = express();
 
 // configurar cors
-// use es considerado un 'middleware' que se ejecuta para todas las instrucciones siguientes
-app.use(cors())
+// cors() es considerado un 'middleware' que se ejecuta para todas las instrucciones siguientes
+app.use(cors());
+
+// Lectura y parseo del body // Nota:: cualquier middleware se utiliza con use
+app.use(express.json());
 
 // Base de datos
 dbConnection();
 
-app.get('/', (req, resp) => {
-  resp.json({
-    ok: true,
-    msg: "Backend Hello"
-  })
-});
+// Rutas
+app.use('/api/usuarios', require('./routes/usuarios'))
+app.use('/api/login', require('./routes/auth'))
 
 app.listen(process.env.PORT, () => {
   console.log("Server is running in port " + process.env.PORT)
