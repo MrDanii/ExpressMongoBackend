@@ -6,7 +6,23 @@ const { generarToken } = require('../helpers/jwt');
 // get users from hospital databse
 const getUsuarios = async (req, resp = response) => {
 
-  const usuarios = await Usuario.find({}, 'nombre email rol google');
+  const desde = Number(req.query.desde) || 0;
+
+  // const usuarios = await Usuario.find({}, 'nombre email rol google')
+  //   .skip(desde)
+  //   .limit(5);
+  // const total = await Usuario.count()
+
+  // NOTA: Un truco bastante interesante!!
+  // Podemos ejecutear 2 promesas de manera assincrona y además esperar a que las 2 terminen de manera sincrona
+  // Ya solo basta desestructurar cada resultado
+  const [usuarios, total] = await Promise.all([
+    Usuario
+      .find({}, 'nombre email rol google imagen')
+      .skip(desde)
+      .limit(5),
+    Usuario.countDocuments()
+  ])
 
   resp.json({
     ok: true,
