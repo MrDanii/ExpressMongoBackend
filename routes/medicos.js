@@ -20,7 +20,6 @@ router.get('/', [
 
 // const campos = ['nombre', 'password', 'email'] // Se puede hacer con un arreglo de cadenas
 router.post('/', [
-
   validarJWT,
   check('nombre', 'El nombre del medico es requerido').not().isEmpty(),
   check('hospital', 'El id del hospital debe ser valido').isMongoId(),
@@ -28,11 +27,13 @@ router.post('/', [
 ], crearMedico);
 
 router.put('/:id', [
-
+  validarJWT,
+  check('nombre', 'El nombre del medico es requerido').not().isEmpty(),
+  check('hospital', 'El id del hospital debe ser valido').isMongoId(),
 ], actualizarMedico);
 
 router.delete('/:id', [
-
+  validarJWT
 ], borrarMedico);
 
 module.exports = router

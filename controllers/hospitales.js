@@ -39,16 +39,65 @@ const crearHospital = async (req, res = response) => {
 }
 
 const actualizarHospital = async (req, res = response) => {
-  return res.json({
-    ok: true,
-    msg: "actualizarHospital"
-  })
+
+  const idHospital = req.params.id
+  const uid = req.uid
+
+  try {
+    const hospital = await Hospital.findById(idHospital)
+
+    if (!hospital) {
+      return res.status(404).json({
+        ok: true,
+        msg: "Hospital no encontrado"
+      })
+    }
+
+    const cambiosHospital = {
+      ...req.body,
+      usuario: uid
+    }
+
+    // la opcion "new" regresa el ultimo documento actualizado
+    const hospitalActualizado = await Hospital.findByIdAndUpdate(idHospital, cambiosHospital, { new: true })
+
+    return res.json({
+      ok: true,
+      hospital: hospitalActualizado
+    })
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Unexpected Error"
+    })
+  }
 }
+
 const borrarHospital = async (req, res = response) => {
-  return res.json({
-    ok: true,
-    msg: "borrarHospital"
-  })
+  const idHospital = req.params.id
+
+  try {
+    const hospital = await Hospital.findById(idHospital)
+
+    if (!hospital) {
+      return res.status(404).json({
+        ok: true,
+        msg: "Hospital no encontrado"
+      })
+    }
+
+    await Hospital.findByIdAndDelete(idHospital)
+
+    return res.json({
+      ok: true,
+      msg: "Hospital eliminado"
+    })
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: "Unexpected Error"
+    })
+  }
 }
 
 module.exports = {

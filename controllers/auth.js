@@ -91,7 +91,17 @@ const googleSignIn = async (req, res = response) => {
   }
 }
 
+const renewToken = async (req, res = response) => {
+  const uid = req.uid
+  const token = await generarToken(uid)
+
+  return res.json({
+    ok: true,
+    token
+  })
+}
 module.exports = {
   verifyLogin, 
-  googleSignIn
+  googleSignIn,
+  renewToken
 }
