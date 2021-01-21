@@ -17,7 +17,7 @@ router.put('/:tipo/:id', [
 ], fileUpload);
 
 router.get('/:tipo/:foto', [
-  validarJWT
+  // validarJWT
 ], fileDownload);
 
 // router.get('/coleccion/:tabla/:busqueda', [

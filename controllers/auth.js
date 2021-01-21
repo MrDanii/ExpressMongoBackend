@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const Usuario = require("../models/usuario")
 const { generarToken } = require('../helpers/jwt')
 const { verify, googleVerify } = require('../helpers/google-verify')
+const usuario = require('../models/usuario')
 
 const verifyLogin = async (req, res = response) => {
 
@@ -48,16 +49,16 @@ const googleSignIn = async (req, res = response) => {
 
   const googleToken = req.body.token
   try {
-    
+
     // 1. verificamos el google token y obtenemos el email, name y picture de la autenticacion de google
-    const {email, name, picture} = await googleVerify(googleToken);
+    const { email, name, picture } = await googleVerify(googleToken);
 
     // 2. Verificar si el usuario ya existe
-    const usuarioDB = await Usuario.findOne({email})
+    const usuarioDB = await Usuario.findOne({ email })
     let usuario
 
     // Si no existe el usuario, creamos un nuevo usuario
-    if(!usuarioDB){
+    if (!usuarioDB) {
       usuario = new Usuario({
         nombre: name,
         email: email,
@@ -65,8 +66,8 @@ const googleSignIn = async (req, res = response) => {
         imagen: picture,
         google: true
       })
-      
-    }else{
+
+    } else {
       // Si existe el usuario, cambiamos el modo de autenticacion a google
       usuario = usuarioDB
       usuario.google = true
@@ -95,13 +96,17 @@ const renewToken = async (req, res = response) => {
   const uid = req.uid
   const token = await generarToken(uid)
 
+  // Getting user
+  const user = await usuario.findById(req.uid)
+
   return res.json({
     ok: true,
-    token
+    token,
+    usuario: user
   })
 }
 module.exports = {
-  verifyLogin, 
+  verifyLogin,
   googleSignIn,
   renewToken
 }
