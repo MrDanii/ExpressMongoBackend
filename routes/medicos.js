@@ -12,10 +12,11 @@ const {
   crearMedico,
   actualizarMedico,
   borrarMedico,
+  getMedicoById
 } = require('../controllers/medicos')
 
 router.get('/', [
-
+  validarJWT
 ], getMedicos);
 
 // const campos = ['nombre', 'password', 'email'] // Se puede hacer con un arreglo de cadenas
@@ -35,6 +36,10 @@ router.put('/:id', [
 router.delete('/:id', [
   validarJWT
 ], borrarMedico);
+
+router.get('/:id', [
+  validarJWT
+], getMedicoById);
 
 module.exports = router
 // module.exports = { router }

@@ -26,8 +26,8 @@ const getUsuarios = async (req, resp = response) => {
 
   resp.json({
     ok: true,
-    usuarios,
-    uid: req.uid
+    total,
+    usuarios
   })
 }
 
